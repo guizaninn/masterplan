@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Plano Fit — Guilherme</title>
+<style>
+:root{
+  --bg:#f2f2f7; --card:#ffffff; --card2:#f2f2f7; --fill:rgba(120,120,128,.12);
+  --label:#1d1d1f; --sec:#6e6e73; --ter:#aeaeb2; --sep:rgba(60,60,67,.12);
+  --blue:#007aff; --orange:#ff9500; --teal:#30b0c7; --green:#34c759; --red:#ff3b30;
+  --yellow:#ffcc00; --pink:#ff375f; --purple:#af52de; --indigo:#5856d6; --mint:#00c7be;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+  --blur:saturate(180%) blur(20px); --barbg:rgba(249,249,249,.82);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#000; --card:#1c1c1e; --card2:#2c2c2e; --fill:rgba(120,120,128,.24);
+    --label:#f5f5f7; --sec:#98989f; --ter:#636366; --sep:rgba(84,84,88,.42);
+    --blue:#0a84ff; --orange:#ff9f0a; --teal:#40c8e0; --green:#30d158; --red:#ff453a;
+    --yellow:#ffd60a; --pink:#ff375f; --purple:#bf5af2; --indigo:#5e5ce6; --mint:#63e6e2;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+    --barbg:rgba(22,22,24,.82);
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--label);
+  -webkit-font-smoothing:antialiased; line-height:1.45;
+  padding-bottom:calc(88px + env(safe-area-inset-bottom));
+}
+.wrap{max-width:660px;margin:0 auto;padding:0 16px}
+/* ---------- Header ---------- */
+header{padding:max(20px,env(safe-area-inset-top)) 0 6px}
+.ltitle{font-size:34px;font-weight:800;letter-spacing:-.4px;line-height:1.1}
+.subtitle{color:var(--sec);font-size:14px;margin-top:5px;font-weight:500}
+.revchip{display:inline-flex;align-items:center;gap:6px;background:var(--fill);color:var(--sec);
+  font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:99px;margin-top:10px}
+/* ---------- Cards ---------- */
+.card{background:var(--card);border-radius:20px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+.card h2{font-size:19px;font-weight:700;letter-spacing:-.2px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card h2 .ic{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.card .cap{color:var(--sec);font-size:13.5px;margin-bottom:12px}
+.sechead{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--sec);margin:26px 4px 2px}
+.note{font-size:13px;color:var(--sec);background:var(--fill);border-radius:12px;padding:10px 12px;margin-top:12px}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;white-space:nowrap}
+/* ---------- Tab bar ---------- */
+nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--barbg);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
+  border-top:.5px solid var(--sep);padding-bottom:env(safe-area-inset-bottom)}
+.tabs{max-width:660px;margin:0 auto;display:flex}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 6px;
+  background:none;border:none;color:var(--ter);cursor:pointer;font-family:inherit;transition:color .18s}
+.tab svg{width:26px;height:26px}
+.tab span{font-size:10px;font-weight:600}
+.tab.on{color:var(--blue)}
+/* ---------- Panels ---------- */
+.panel{display:none;animation:fadeUp .28s ease}
+.panel.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* ---------- Semana ---------- */
+.day{display:flex;gap:14px;padding:13px 0;border-bottom:.5px solid var(--sep);align-items:flex-start}
+.day:last-child{border:none;padding-bottom:2px}
+.day .dot{width:44px;flex-shrink:0;text-align:center}
+.day .dot .dn{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sec);letter-spacing:.5px}
+.day .dot .dc{width:36px;height:36px;margin:3px auto 0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--fill)}
+.day.today .dot .dc{background:var(--blue);color:#fff}
+.day.today .dot .dn{color:var(--blue)}
+.day .lines{flex:1;min-width:0}
+.day .l{display:flex;gap:7px;font-size:13.5px;margin:2px 0;align-items:baseline}
+.day .l .t{font-size:10.5px;font-weight:700;color:var(--ter);width:52px;flex-shrink:0;text-transform:uppercase;letter-spacing:.4px}
+.day .l .hl{font-weight:650}
+.todaychip{background:var(--blue);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:2px}
+/* block tracker */
+.blockrow{display:flex;gap:8px;margin-top:10px}
+.wk{flex:1;text-align:center;padding:10px 4px;border-radius:14px;background:var(--fill);transition:.2s}
+.wk .n{font-size:11px;font-weight:700;color:var(--sec)}
+.wk .r{font-size:15px;font-weight:800;margin-top:1px}
+.wk .p{font-size:10px;color:var(--sec);margin-top:1px}
+.wk.now{background:var(--blue);color:#fff}
+.wk.now .n,.wk.now .p{color:rgba(255,255,255,.75)}
+.wk.deload.now{background:var(--purple)}
+input[type=date],input[type=number],input[type=text]{
+  font-family:inherit;font-size:15px;color:var(--label);background:var(--fill);
+  border:none;border-radius:12px;padding:10px 12px;outline:none;width:100%;-webkit-appearance:none}
+.btn{font-family:inherit;font-size:15px;font-weight:650;color:#fff;background:var(--blue);
+  border:none;border-radius:13px;padding:11px 18px;cursor:pointer;transition:transform .12s,opacity .2s}
+.btn:active{transform:scale(.96);opacity:.85}
+.btn.ghost{background:var(--fill);color:var(--blue)}
+.btn.sm{font-size:13px;padding:8px 13px;border-radius:11px}
+/* ---------- Treinos ---------- */
+details.wo{background:var(--card);border-radius:20px;margin:12px 0;box-shadow:var(--shadow);overflow:hidden}
+details.wo>summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;align-items:center;gap:13px}
+details.wo>summary::-webkit-details-marker{display:none}
+.wo .wic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;flex-shrink:0}
+.wo .wt{flex:1;min-width:0}
+.wo .wt b{font-size:16.5px;font-weight:700;display:block;letter-spacing:-.2px}
+.wo .wt small{color:var(--sec);font-size:12.5px}
+.chev{width:18px;height:18px;color:var(--ter);transition:transform .25s;flex-shrink:0}
+details[open]>summary .chev{transform:rotate(90deg)}
+.wo .body{padding:0 18px 16px}
+.exrow{border-top:.5px solid var(--sep)}
+details.ex>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 0}
+details.ex>summary::-webkit-details-marker{display:none}
+.ex .en{flex:1;font-size:14.5px;font-weight:600;min-width:0}
+.ex .en small{display:block;font-weight:500;color:var(--sec);font-size:12px;margin-top:1px}
+.ex .meta{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.ex .sr{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.ex .rir{font-size:10.5px;font-weight:800;padding:2.5px 7px;border-radius:99px;background:var(--fill);color:var(--sec)}
+.howto{background:var(--fill);border-radius:14px;padding:12px 14px;margin:0 0 12px;font-size:13.5px}
+.howto ol{margin:4px 0 0 18px}
+.howto li{margin:3px 0}
+.howto .tip{display:flex;gap:6px;margin-top:8px;font-size:12.5px;color:var(--sec)}
+.wonote{font-size:12.5px;color:var(--sec);background:var(--fill);border-radius:12px;padding:9px 12px;margin-bottom:10px}
+/* ---------- Manhã ---------- */
+.seg{display:flex;background:var(--fill);border-radius:11px;padding:2px;margin:12px 0 4px;overflow-x:auto}
+.seg button{flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:7px 6px;border:none;border-radius:9px;
+  background:transparent;color:var(--sec);cursor:pointer;white-space:nowrap;transition:.18s}
+.seg button.on{background:var(--card);color:var(--label);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.kbex{display:flex;gap:14px;padding:14px 0;border-bottom:.5px solid var(--sep);align-items:flex-start}
+.kbex:last-child{border:none}
+.kbfig{width:118px;flex-shrink:0;background:var(--fill);border-radius:14px;padding:6px}
+.kbfig svg{width:100%;height:auto;display:block}
+.kbtxt{flex:1;min-width:0}
+.kbtxt b{font-size:15px;font-weight:700;display:block}
+.kbtxt .dose{font-size:12px;font-weight:700;color:var(--teal);margin:1px 0 4px}
+.kbtxt p{font-size:13px;color:var(--sec)}
+.fig-stroke{stroke:var(--label);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.fig-head{fill:var(--label)}
+.fig-kb{fill:var(--teal)}
+.fig-ground{stroke:var(--ter);stroke-width:2.5;stroke-linecap:round;opacity:.6}
+.fig-dash{stroke:var(--teal);stroke-width:2.5;stroke-dasharray:5 5;fill:none;stroke-linecap:round}
+/* ---------- Nutrição ---------- */
+.kcal{font-size:44px;font-weight:800;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums}
+.kcal small{font-size:16px;font-weight:600;color:var(--sec);letter-spacing:0}
+.macro{margin:13px 0 0}
+.macro .mh{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+.macro .mh b{font-weight:650}
+.macro .mh span{color:var(--sec);font-weight:600;font-variant-numeric:tabular-nums}
+.mbar{height:9px;border-radius:99px;background:var(--fill);overflow:hidden}
+.mbar i{display:block;height:100%;border-radius:99px;transition:width .5s cubic-bezier(.3,.8,.3,1)}
+.mealrow{display:flex;gap:12px;padding:11px 0;border-bottom:.5px solid var(--sep);font-size:13.5px}
+.mealrow:last-child{border:none}
+.mealrow .mt{width:64px;flex-shrink:0;font-weight:700;color:var(--green);font-size:12.5px;padding-top:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{background:var(--fill);font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:99px}
+.foodgrp{margin:12px 0}
+.foodgrp b{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:6px}
+.alc li,.list li{margin:7px 0 7px 4px;font-size:13.5px;list-style:none;display:flex;gap:9px}
+.alc li::before,.list li::before{content:"";width:6px;height:6px;border-radius:99px;background:var(--green);flex-shrink:0;margin-top:7px}
+.alc li::before{background:var(--orange)}
+/* ---------- Saúde ---------- */
+.semrow{display:flex;gap:10px;margin:12px 0}
+.semb{flex:1;border:none;border-radius:16px;padding:14px 6px;font-family:inherit;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--fill);transition:transform .12s}
+.semb:active{transform:scale(.95)}
+.semb .em{width:26px;height:26px;border-radius:99px}
+.semb b{font-size:12.5px;font-weight:700;color:var(--label)}
+.semb small{font-size:10px;color:var(--sec)}
+.semg .em{background:var(--green)} .semy .em{background:var(--yellow)} .semr .em{background:var(--red)}
+.semmsg{font-size:13px;border-radius:14px;padding:11px 13px;margin-top:4px;display:none}
+.logrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:.5px solid var(--sep);font-size:14px}
+.logrow:last-child{border:none}
+.logrow .d{color:var(--sec);font-size:12.5px;width:86px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.logrow .v{flex:1;font-weight:650;font-variant-numeric:tabular-nums}
+.logrow .del{background:none;border:none;color:var(--ter);font-size:17px;cursor:pointer;padding:2px 6px}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.stat{background:var(--fill);border-radius:14px;padding:11px 13px}
+.stat .sv{font-size:21px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.stat .sl{font-size:11px;font-weight:600;color:var(--sec);margin-top:1px}
+.addrow{display:flex;gap:8px;margin:12px 0 4px}
+.addrow input[type=number]{flex:1}
+.addrow input[type=date]{flex:1.2}
+.addrow .btn{flex-shrink:0}
+#wchart,#cchart{width:100%;height:auto;display:block;margin-top:6px}
+.trend{font-size:13px;font-weight:650;margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.trend .tag{font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px}
+.hmk{display:flex;gap:12px;padding:11px 0;border-bottom:.5px solid var(--sep);align-items:center}
+.hmk:last-child{border:none}
+.hmk .hv{width:74px;flex-shrink:0;text-align:center}
+.hmk .hv b{font-size:17px;font-weight:800;display:block;font-variant-numeric:tabular-nums}
+.hmk .hv small{font-size:10px;color:var(--sec);font-weight:600}
+.hmk .ht{flex:1;font-size:13px;color:var(--sec)}
+.hmk .ht b{color:var(--label);font-size:13.5px;display:block}
+.plio{display:flex;gap:12px;padding:12px 0;border-bottom:.5px solid var(--sep)}
+.plio:last-child{border:none}
+.plio .pn{width:28px;height:28px;border-radius:99px;background:var(--fill);color:var(--sec);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.plio .pt{flex:1;font-size:13px;color:var(--sec)}
+.plio .pt b{color:var(--label);font-size:14px;display:block}
+.plio .pt em{font-style:normal;font-size:12px;color:var(--teal);font-weight:650;display:block;margin-top:2px}
+.footer{color:var(--ter);font-size:11.5px;text-align:center;margin:30px 0 8px;padding:0 20px}
+@media(max-width:420px){ .ltitle{font-size:30px} .kbfig{width:100px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="ltitle">Plano Fit</div>
+  <div class="subtitle">Recomposição equilibrada · Futebol · Joelho protegido</div>
+  <span class="revchip">Revisado em 11/07/2026 · Guilherme Zanin · 82–83 kg · 181 cm</span>
+</header>
+
+<!-- ================= SEMANA ================= -->
+<section class="panel on" id="p-semana">
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(0,122,255,.15);color:var(--blue)">📅</span>Cronograma semanal</h2>
+    <div class="cap">Manhã: kettlebell 15 min · Dia: academia · Noite: agenda</div>
+    <div id="weeklist"></div>
+    <div class="note">🔑 <b>Mudanças-chave:</b> quarta virou upper com ênfase em <b>puxada</b> (costas 2×/semana) · sábado ganhou cardio zona 2 opcional (alavanca de HDL) · sáb/dom = descanso real de força.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(175,82,222,.15);color:var(--purple)">🔁</span>Bloco de 4 semanas</h2>
+    <div class="cap">3 semanas de progressão + 1 deload. A semana de deload é <b>inegociável</b> (sono 6–7h + 2 jogos).</div>
+    <div class="blockrow" id="blockrow">
+      <div class="wk" data-w="0"><div class="n">SEM 1</div><div class="r">RIR 2–3</div><div class="p">acumulação</div></div>
+      <div class="wk" data-w="1"><div class="n">SEM 2</div><div class="r">RIR 2–3</div><div class="p">acumulação</div></div>
+      <div class="wk" data-w="2"><div class="n">SEM 3</div><div class="r">RIR 1–2</div><div class="p">intensificação</div></div>
+      <div class="wk deload" data-w="3"><div class="n">SEM 4</div><div class="r">RIR 3–4</div><div class="p">deload −35%</div></div>
+    </div>
+    <div class="addrow">
+      <input type="date" id="blockstart" aria-label="Início do bloco">
+      <button class="btn sm" onclick="saveBlock()">Definir início</button>
+    </div>
+    <div class="trend" id="blockinfo" style="display:none"></div>
+    <div class="note">A cada 2–3 blocos, troque 1–2 acessórios para variar o estímulo. Estagnou 2–3 semanas no mesmo peso/reps? Antecipe o deload ou troque o acessório.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(255,149,0,.15);color:var(--orange)">📈</span>Dupla progressão</h2>
+    <div class="cap">Como saber quando subir a carga</div>
+    <ul class="list">
+      <li>Comece na carga em que faz o <b>número mais baixo</b> da faixa em todas as séries, no RIR-alvo.</li>
+      <li>A cada treino, some repetições. Bateu o <b>topo da faixa em todas as séries</b>? Suba a carga (+2,5–5 kg superior · +5 kg perna) e volte ao fim de baixo da faixa.</li>
+      <li>No <b>agachamento e terra, nunca 0 RIR</b> — pare com margem de técnica, ainda mais pelo joelho.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= TREINOS ================= -->
+<section class="panel" id="p-treinos">
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(255,149,0,.15);color:var(--orange)">🔥</span>Aquecimento — toda sessão</h2>
+    <ul class="list">
+      <li><b>Mobilidade específica 5–8 min:</b> tornozelo + quadril + ativação de glúteo (banda, ponte). Dias de perna: +2 min de quadríceps/VMO (extensão terminal leve).</li>
+      <li><b>Ramp-up nos compostos:</b> 2–3 séries de aproximação subindo a carga (barra vazia → 50% → 70%) antes da 1ª série de trabalho. Protege joelho e lombar.</li>
+    </ul>
+  </div>
+  <div id="wolist"></div>
+  <div class="note" style="margin:14px 2px">💪 Registro de cargas e execução dos treinos: continue no <b>Hevy</b>. Aqui os exercícios têm instruções de execução — toque em qualquer um para expandir.</div>
+</section>
+
+<!-- ================= MANHÃ ================= -->
+<section class="panel" id="p-manha">
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(48,176,199,.15);color:var(--teal)">🌅</span>Kettlebell matinal · 15 min</h2>
+    <div class="cap">Core forte transfere para disputa de bola e protege a lombar (home office). Intensidade baixa/moderada — <b>somar, nunca competir com a recuperação</b>. Treinar em jejum não queima mais gordura e abdominal não seca barriga: o valor é funcional.</div>
+    <div class="seg" id="kbseg"></div>
+    <div id="kbday"></div>
+  </div>
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(48,176,199,.15);color:var(--teal)">🧘</span>Circuito de mobilidade (todo dia)</h2>
+    <div id="moblist"></div>
+  </div>
+</section>
+
+<!-- ================= NUTRIÇÃO ================= -->
+<section class="panel" id="p-nutri">
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(52,199,89,.15);color:var(--green)">🥗</span>Metas do dia</h2>
+    <div class="cap">Proteína fixa em <b>2,2 g/kg</b> — é o ponto inegociável. Carb cycling: mais carbo quando treina/joga.</div>
+    <div class="seg" id="nutseg">
+      <button class="on" data-n="0">Seg · Qua<br>jogo+treino</button>
+      <button data-n="1">Ter · Qui<br>só força</button>
+      <button data-n="2">Sex–Dom<br>descanso</button>
+    </div>
+    <div style="margin-top:14px"><span class="kcal" id="nkcal">3.050</span> <small class="kcal"><small>kcal</small></small></div>
+    <div class="macro"><div class="mh"><b>Proteína</b><span id="mp">190 g</span></div><div class="mbar"><i id="bp" style="background:var(--red)"></i></div></div>
+    <div class="macro"><div class="mh"><b>Carboidrato</b><span id="mc">~400 g</span></div><div class="mbar"><i id="bc" style="background:var(--orange)"></i></div></div>
+    <div class="macro"><div class="mh"><b>Gordura</b><span id="mg">75 g</span></div><div class="mbar"><i id="bg" style="background:var(--yellow)"></i></div></div>
+    <div class="macro"><div class="mh"><b>Fibra</b><span id="mf">30–38 g</span></div><div class="mbar"><i id="bf" style="background:var(--green)"></i></div></div>
+    <div class="note" id="nnote"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(52,199,89,.15);color:var(--green)">🍽️</span>Estrutura de refeições</h2>
+    <div class="cap"><b>Fixos todos os dias:</b> café 6h30–7h (ovos + pão integral + fruta, ou whey + aveia) e almoço 12h–13h (frango/carne + arroz/batata + salada com azeite). A noite muda:</div>
+    <div class="mealrow"><div class="mt">SEG<br><small style="font-weight:500;color:var(--sec)">jogo leve</small></div><div>Lanche leve ~16h · jantar cedo e leve 18h30–19h (pouca gordura/fibra) · pós-jogo ~22h: lanche proteico só se bater fome.</div></div>
+    <div class="mealrow"><div class="mt">QUA<br><small style="font-weight:500;color:var(--sec)">jogo Gala</small></div><div><b>Pré-jogo 17h30–18h:</b> 60–90 g carbo + 25–30 g proteína, pouca gordura/fibra (arroz + frango, ou pão + peito de peru + banana). <b>Pós ~22h15:</b> 40–60 g carbo + 25–40 g proteína (whey + fruta).</div></div>
+    <div class="mealrow"><div class="mt">TER · QUI<br><small style="font-weight:500;color:var(--sec)">MBA</small></div><div>Jantar antecipado ~18h30, ou lanche proteico prático para o intervalo da aula.</div></div>
+    <div class="mealrow"><div class="mt">SEX–DOM</div><div>Jantar normal 19h30–20h30. Ceia opcional em qualquer dia (iogurte grego/cottage) se bater fome.</div></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(52,199,89,.15);color:var(--green)">🛒</span>Fontes de alimentos</h2>
+    <div class="foodgrp"><b>🍗 Proteína</b><div class="chips"><span class="chip">Peito de frango</span><span class="chip">Patinho 95/5</span><span class="chip">Ovos</span><span class="chip">Atum/salmão 2–3×/sem</span><span class="chip">Whey</span><span class="chip">Iogurte grego</span><span class="chip">Cottage</span></div></div>
+    <div class="foodgrp"><b>🍚 Carboidrato</b><div class="chips"><span class="chip">Arroz</span><span class="chip">Batata-doce</span><span class="chip">Pão integral</span><span class="chip">Aveia</span><span class="chip">Banana (pré-treino)</span></div></div>
+    <div class="foodgrp"><b>🥑 Gordura boa (HDL!)</b><div class="chips"><span class="chip">Azeite extra virgem</span><span class="chip">Abacate</span><span class="chip">Castanhas</span><span class="chip">Salmão/sardinha</span></div></div>
+    <div class="foodgrp"><b>🥦 Vegetais/fibra</b><div class="chips"><span class="chip">Metade do prato</span><span class="chip">2–3 porções vegetais</span><span class="chip">2 frutas/dia</span></div></div>
+    <div class="note">⬇️ <b>Reduzir:</b> frituras, embutidos, ultraprocessados e excesso de álcool. 🥩 Churrasco pode: cortes magros (alcatra, picanha sem excesso) + salada, balanceando na semana.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(0,122,255,.15);color:var(--blue)">💧</span>Hidratação</h2>
+    <ul class="list">
+      <li><b>~3 L/dia</b> (35 ml/kg); mais nos dias de treino + jogo.</li>
+      <li><b>Dias de jogo:</b> 500 ml nas 2h antes · água + pitada de sal/eletrólitos durante, se calor · 500–750 ml na 1ª hora após.</li>
+      <li>Sinal prático: urina <b>amarelo-clara</b>. Escura = beber mais.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(88,86,214,.15);color:var(--indigo)">💊</span>Suplementação (opcional)</h2>
+    <ul class="list">
+      <li><b>Creatina 3–5 g/dia, todo dia</b> — força bem documentada, sem contraindicação nos seus exames.</li>
+      <li><b>Whey</b> — prático para bater a proteína (café ou pré-MBA).</li>
+      <li><b>Ômega-3 (EPA/DHA)</b> ou peixe gordo 2–3×/sem — ajuda o HDL baixo.</li>
+      <li><b>Vitamina D: não suplementar</b> — 36,5 ng/mL já está bom; reavaliar no próximo exame.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(255,149,0,.15);color:var(--orange)">🍷</span>Álcool no fim de semana</h2>
+    <div class="cap"><b>Alavanca principal</b> para TGP, HDL e para não apagar o déficit da semana. Não precisa zerar — reduzir dano e volume:</div>
+    <ul class="alc">
+      <li><b>Teto de doses</b> definido antes de começar (ex.: 4–5) + 1 copo de água entre cada dose.</li>
+      <li>Prefira <b>destilado com água/zero ou vinho seco</b> a cerveja/drinks açucarados.</li>
+      <li><b>Proteína + vegetais antes de beber</b> — reduz o total da noite.</li>
+      <li><b>Não beber no domingo à noite</b> (véspera do futebol de segunda) — piora recuperação e inchaço do joelho.</li>
+      <li><b>Concentrar em 1 noite</b> em vez de sábado + domingo.</li>
+    </ul>
+    <div class="note">📊 <b>Impacto esperado:</b> é o que mais rápido normaliza o TGP e destrava a recomposição. Reavaliar exames em 3–4 meses.</div>
+  </div>
+</section>
+
+<!-- ================= SAÚDE ================= -->
+<section class="panel" id="p-saude">
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(255,55,95,.15);color:var(--pink)">🦵</span>Semáforo do joelho</h2>
+    <div class="cap">Classifique a <b>manhã seguinte</b> a cada jogo. Rotina pós-jogo fixa: desaquecimento leve + gelo 15 min + elevação se sentir cheio.</div>
+    <div class="semrow">
+      <button class="semb semg" onclick="addKnee('g')"><span class="em"></span><b>Verde</b><small>sem inchaço</small></button>
+      <button class="semb semy" onclick="addKnee('y')"><span class="em"></span><b>Amarelo</b><small>leve rigidez</small></button>
+      <button class="semb semr" onclick="addKnee('r')"><span class="em"></span><b>Vermelho</b><small>inchaço visível</small></button>
+    </div>
+    <div class="semmsg" id="semmsg"></div>
+    <div id="kneelog"></div>
+    <div class="note" id="kneealert" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(0,122,255,.15);color:var(--blue)">⚖️</span>Peso corporal</h2>
+    <div class="cap">Em jejum, 3–4×/semana. O que vale é a <b>média semanal</b> — nunca o valor isolado. Meta: −0,3 a −0,5%/semana.</div>
+    <div class="addrow">
+      <input type="number" id="win" step="0.1" min="50" max="120" placeholder="82.5" inputmode="decimal" aria-label="Peso em kg">
+      <input type="date" id="wdate" aria-label="Data">
+      <button class="btn sm" onclick="addWeight()">＋</button>
+    </div>
+    <div class="statgrid" id="wstats"></div>
+    <svg id="wchart" viewBox="0 0 600 220" role="img" aria-label="Gráfico de peso"></svg>
+    <div class="trend" id="wtrend"></div>
+    <div id="wlog"></div>
+    <div class="note">⚠️ <b>Regra de ajuste:</b> caiu &gt;0,7%/semana por 2 semanas, ou a energia no futebol caiu? <b>Aumente calorias</b> (mais carbo nos dias de treino) antes de perder performance.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(255,149,0,.15);color:var(--orange)">📏</span>Cintura (umbigo)</h2>
+    <div class="cap">A cada 2 semanas — melhor termômetro dos love handles do que a balança.</div>
+    <div class="addrow">
+      <input type="number" id="cin" step="0.5" min="60" max="130" placeholder="86.0" inputmode="decimal" aria-label="Cintura em cm">
+      <input type="date" id="cdate" aria-label="Data">
+      <button class="btn sm" onclick="addWaist()">＋</button>
+    </div>
+    <svg id="cchart" viewBox="0 0 600 170" role="img" aria-label="Gráfico de cintura"></svg>
+    <div id="clog"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(48,209,88,.15);color:var(--green)">🩺</span>Marcadores de saúde</h2>
+    <div class="hmk"><div class="hv"><b style="color:var(--orange)">33</b><small>HDL · meta &gt;40</small></div><div class="ht"><b>HDL baixo</b>Alavancas na ordem: ↓álcool, ↓gordura abdominal, cardio Z2 (sáb), gordura boa + ômega-3. Reavaliar em 3–4 meses.</div></div>
+    <div class="hmk"><div class="hv"><b style="color:var(--orange)">44,3</b><small>TGP · ref ≤41</small></div><div class="ht"><b>TGP levemente alto</b>Provável álcool de fim de semana. Reduzir e reavaliar; se persistir sem álcool, investigar com médico.</div></div>
+    <div class="hmk"><div class="hv"><b style="color:var(--blue)">7h+</b><small>sono · meta</small></div><div class="ht"><b>Sono é o pilar nº 1</b>Hoje 6–7h. Proteger as noites de MBA — recuperação ruim trava resultado e machuca joelho.</div></div>
+    <div class="hmk"><div class="hv"><b style="color:var(--green)">44</b><small>VO₂máx</small></div><div class="ht"><b>Bom condicionamento</b>FC repouso ~55 bpm. Manter com futebol 2× + cardio Z2 opcional.</div></div>
+    <div class="hmk"><div class="hv"><b style="color:var(--pink)">&lt;10%</b><small>simetria D/E</small></div><div class="ht"><b>Teste a cada 4–6 semanas</b>Compare força/reps D vs E em unilaterais. Direita atrás? Comece por ela, +1 série.</div></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(255,55,95,.15);color:var(--pink)">🤸</span>Pliometria progressiva — só com joelho verde</h2>
+    <div class="plio"><div class="pn">1</div><div class="pt"><b>Aterrissagem</b>Agachamento com pausa, drop and stick (cair e estabilizar), pouca altura.<em>Avance quando: dominar antes de saltar</em></div></div>
+    <div class="plio"><div class="pn">2</div><div class="pt"><b>Bilateral leve</b>Saltos verticais baixos, pogo, corda.<em>Avance quando: aterrissagem sólida, sem inchaço 48h</em></div></div>
+    <div class="plio"><div class="pn">3</div><div class="pt"><b>Unilateral / lateral</b>Skater jump curto, saltos laterais controlados, desaceleração.<em>Avance quando: fase 2 sem sintoma por 2 semanas</em></div></div>
+    <div class="plio"><div class="pn">4</div><div class="pt"><b>Específico do jogo</b>Mudança de direção progressiva, aceleração/frenagem.<em>Avance quando: fase 3 sem inchaço</em></div></div>
+    <div class="note">Derrame recorrente 2 anos pós-op merece avaliação profissional — pode ser sobrecarga, déficit de quadríceps ou menisco. Vermelho 2–3 semanas seguidas = fisio/ortopedista.</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ic" style="background:rgba(120,120,128,.16);color:var(--sec)">📤</span>Dados</h2>
+    <div class="cap">Seus registros ficam salvos neste navegador (localStorage).</div>
+    <div style="display:flex;gap:8px"><button class="btn ghost sm" onclick="exportData()">Exportar JSON</button><button class="btn ghost sm" style="color:var(--red)" onclick="clearData()">Apagar tudo</button></div>
+  </div>
+
+  <div class="footer">Este plano não substitui avaliação médica ou fisioterapêutica. Joelho com derrame recorrente, HDL e TGP devem ser acompanhados por profissionais. · Baseado no Plano Revisado de 11/07/2026.</div>
+</section>
+</div>
+
+<!-- ================= TAB BAR ================= -->
+<nav><div class="tabs">
+  <button class="tab on" data-p="semana"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/><circle cx="8.5" cy="14.5" r="1.3" fill="currentColor" stroke="none"/></svg><span>Semana</span></button>
+  <button class="tab" data-p="treinos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 8v8M4.5 9.5v5M19.5 9.5v5M16.5 8v8M7.5 12h9M2 12h2.5M19.5 12H22"/></svg><span>Treinos</span></button>
+  <button class="tab" data-p="manha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2.5M4.9 6.9l1.8 1.8M19.1 6.9l-1.8 1.8M2 13h3M19 13h3M7 16a5 5 0 0 1 10 0"/><path d="M3.5 19.5h17"/></svg><span>Manhã</span></button>
+  <button class="tab" data-p="nutri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2.5 2.5 0 0 0 5 0V3M9.5 3v18M17 3c-1.7 1.2-2.5 3.4-2.5 6v4H17v8"/></svg><span>Nutrição</span></button>
+  <button class="tab" data-p="saude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.2-5 3.6 10 2.2-5H21"/></svg><span>Saúde</span></button>
+</div></nav>
+
+<script>
+/* ============ helpers & storage ============ */
+const $=s=>document.querySelector(s);
+const KEY='planofit_gz_v1';
+const store={get(){try{return localStorage.getItem(KEY)}catch(e){return null}},set(v){try{localStorage.setItem(KEY,v)}catch(e){}}};
+let DB;
+try{DB=JSON.parse(store.get()||'x')}catch(e){DB={w:[],c:[],k:[],bs:null}}
+DB.w=DB.w||[];DB.c=DB.c||[];DB.k=DB.k||[];
+const save=()=>store.set(JSON.stringify(DB));
+const fmt=d=>{const[y,m,dd]=d.split('-');return dd+'/'+m+'/'+y.slice(2)};
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+
+/* ============ tabs ============ */
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on'); $('#p-'+t.dataset.p).classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+}));
+
+/* ============ SEMANA ============ */
+const WEEK=[
+ {d:'Seg',e:'⚽',am:'Core anti-extensão + mobilidade',gym:'Push — Peito, Ombro, Tríceps',pm:'Futebol 7 (leve) 20h30'},
+ {d:'Ter',e:'🎓',am:'Core anti-rotação + mobilidade',gym:'Pull — Costas e Bíceps',pm:'MBA 19h–23h'},
+ {d:'Qua',e:'🏆',am:'Só mobilidade (dia do jogo)',gym:'Upper — ênfase PUXADA + peito/ombro',pm:'Futebol de campo (Gala) — competitivo'},
+ {d:'Qui',e:'🎓',am:'Só mobilidade + ativação leve',gym:'Legs pesado — agacho, RDL, quadríceps',pm:'MBA 19h–23h'},
+ {d:'Sex',e:'🦵',am:'Core rotação controlada + mobilidade',gym:'Legs prevenção — joelho, posterior, plio',pm:'Livre'},
+ {d:'Sáb',e:'🏃',am:'Livre / opcional leve',gym:'Cardio zona 2 opcional 30–40 min (HDL)',pm:'Livre'},
+ {d:'Dom',e:'😴',am:'Descanso',gym:'Descanso completo',pm:'Livre'}];
+(function(){
+  const dow=(new Date().getDay()+6)%7; // 0=Mon
+  $('#weeklist').innerHTML=WEEK.map((w,i)=>`
+   <div class="day${i===dow?' today':''}">
+    <div class="dot"><div class="dn">${w.d}</div><div class="dc">${w.e}</div></div>
+    <div class="lines">
+      ${i===dow?'<span class="todaychip">HOJE</span>':''}
+      <div class="l"><span class="t">Manhã</span><span>${w.am}</span></div>
+      <div class="l"><span class="t">Dia</span><span class="hl">${w.gym}</span></div>
+      <div class="l"><span class="t">Noite</span><span>${w.pm}</span></div>
+    </div></div>`).join('');
+})();
+
+/* block tracker */
+function renderBlock(){
+  if(!DB.bs) return;
+  $('#blockstart').value=DB.bs;
+  const start=new Date(DB.bs+'T00:00'),now=new Date();
+  const wk=Math.floor((now-start)/(7*864e5));
+  if(wk<0)return;
+  const cur=wk%4, blockN=Math.floor(wk/4)+1;
+  document.querySelectorAll('#blockrow .wk').forEach(el=>el.classList.toggle('now',+el.dataset.w===cur));
+  const ph=['Acumulação — técnica limpa, RIR 2–3','Acumulação — some reps, RIR 2–3','Intensificação — perto da falha (compostos RIR 1–2)','DELOAD — corte 30–40% do volume, RIR 3–4'][cur];
+  const bi=$('#blockinfo'); bi.style.display='flex';
+  bi.innerHTML=`<span class="tag" style="background:${cur===3?'var(--purple)':'var(--blue)'};color:#fff">Bloco ${blockN} · Semana ${cur+1}</span> ${ph}`;
+}
+function saveBlock(){const v=$('#blockstart').value;if(!v)return;DB.bs=v;save();renderBlock();}
+renderBlock();
+
+/* ============ TREINOS ============ */
+const H={ // how-to instructions
+ supino:['Deite com escápulas retraídas e pés firmes no chão.','Desça a barra com controle até tocar levemente o peito (linha dos mamilos).','Empurre em linha levemente diagonal, sem rebote.'],
+ militar:['Em pé ou sentado, barra/halteres na altura das clavículas, core firme.','Empurre para cima até estender os cotovelos, sem hiperextender a lombar.','Desça controlado até a altura do queixo/clavícula.'],
+ incmaq:['Ajuste o banco para o pegador ficar na altura do peitoral superior.','Empurre até quase estender; volte controlando 2–3 s.','Foque em sentir o peitoral superior, não o ombro.'],
+ latraise:['Halteres ao lado do corpo, leve inclinação de tronco à frente.','Suba pelos cotovelos até a linha do ombro, mindinho levemente acima.','Desça em 2 s. Sem balanço de tronco.'],
+ triceps:['Cotovelos colados ao tronco, pegue a corda com pegada neutra.','Estenda até o fim separando as pontas da corda embaixo.','Só o antebraço se move; cotovelo é a dobradiça.'],
+ barrafixa:['Pegada pronada um pouco além dos ombros, escápulas deprimidas.','Puxe o peito em direção à barra, cotovelos para baixo.','Desça até quase estender por completo, sem soltar o corpo.'],
+ remadacurv:['Tronco inclinado ~45°, coluna neutra, joelhos semiflexionados.','Puxe a barra em direção ao umbigo, cotovelos rentes.','Segure 1 s no topo; desça sem arredondar as costas.'],
+ puxada:['Pegada conforme variação; peito alto, leve inclinação para trás.','Puxe a barra até a parte alta do peito, cotovelos para baixo e para trás.','Suba controlando — o alongamento também constrói.'],
+ rosca:['Cotovelos fixos ao lado do tronco, punho neutro-firme.','Suba sem balançar o corpo; aperte no topo.','Desça em 2–3 s — a fase excêntrica importa.'],
+ facepull:['Corda na altura do rosto, pegada com polegares para trás.','Puxe em direção à testa abrindo os cotovelos para fora.','Termine com escápulas juntas — postura e ombro saudável.'],
+ remadamaq:['Peito apoiado no suporte; ajuste para pegar com braços estendidos.','Puxe levando os cotovelos para trás, escápulas juntas no final.','Volte devagar sem deixar o peso "puxar" você.'],
+ archnold:['Comece com halteres na frente do peito, palmas para você.','Suba girando as palmas para frente até estender acima da cabeça.','Inverta o giro na descida, controlado.'],
+ biset:['Faça a rosca direta e, sem descanso, emende o tríceps na corda.','Mesmo padrão dos exercícios isolados; descanse só após o par.'],
+ agacho:['Barra no trapézio, pés na largura dos ombros, pontas levemente para fora.','Desça empurrando o quadril para trás e joelhos na linha dos pés — até a amplitude SEM dor.','Suba pressionando o chão inteiro com o pé. Nunca a 0 RIR.'],
+ rdl:['Barra na frente das coxas, joelhos semiflexionados fixos.','Desça empurrando o quadril para trás, coluna neutra, barra rente às pernas.','Sinta o alongamento do posterior e suba contraindo o glúteo.'],
+ extensora:['Ajuste o encosto para o joelho alinhar com o eixo da máquina.','Estenda até o fim, segure 1 s no topo (chave para o VMO).','Desça em 2–3 s. Esse é o exercício-chave do joelho.'],
+ bulgaro:['Pé de trás no banco, o da frente ~2 palmos à frente.','Desça vertical com tronco levemente inclinado — amplitude CONTROLADA (joelho).','Empurre com o calcanhar da frente. Compare D vs E.'],
+ flexopant:['Mesa flexora: quadril colado no banco, flexione até o fim, desça em 2–3 s.','Panturrilha em pé: amplitude completa, pausa de 1 s embaixo (alongado).'],
+ nordic:['Joelhos apoiados, tornozelos presos (ou parceiro/máquina).','Desça o tronco à frente O MAIS DEVAGAR possível, quadril estendido.','Amorteça com as mãos e volte ajudando com os braços. Progrida por amplitude/tempo.'],
+ copenhagen:['Deite de lado, pé de cima apoiado num banco.','Eleve o quadril formando uma linha reta; segure 20–30 s.','Versão mais fácil: apoie o joelho (não o pé) no banco.'],
+ spanish:['Faixa forte atrás dos joelhos, presa a um suporte à frente.','Agache até ~90° mantendo o tronco vertical e segure 30–45 s.','A faixa tira o estresse do tendão patelar — ótimo para o joelho.'],
+ rdluni:['RDL unilateral: em uma perna, desça o peso empurrando o quadril para trás.','Ou step-up: suba num caixote pressionando o calcanhar, sem impulsionar com a perna de trás.','Objetivo: estabilidade e simetria D vs E.'],
+ plio:['Siga a fase atual da progressão (aba Saúde ▸ Pliometria).','Só executar com joelho VERDE — sem inchaço nas últimas 48h.','Qualidade de aterrissagem > altura ou velocidade.'],
+ mobcirc:['Tornozelo na parede, 90/90 de quadril, rotação torácica.','8–10 min contínuos, sem pressa — encerra a sessão.']
+};
+const WOS=[
+ {t:'Push · Segunda',s:'Peito, Ombro e Tríceps',c:'var(--orange)',e:'🏋️',note:null,ex:[
+  ['Supino Reto (barra ou halter)','4 × 6–10','2–3','2 min','supino'],
+  ['Desenvolvimento Militar','3 × 8–10','2','90 s','militar'],
+  ['Supino Inclinado na máquina','3 × 10–12','1–2','90 s','incmaq'],
+  ['Elevação Lateral (halter)','4 × 12–15','1','60 s','latraise'],
+  ['Tríceps na corda ou paralela','3 × 10–12','1','60 s','triceps']]},
+ {t:'Pull · Terça',s:'Costas e Bíceps',c:'var(--blue)',e:'🧗',note:null,ex:[
+  ['Barra Fixa (livre ou assistida)','4 × 6–10','2','2 min','barrafixa'],
+  ['Remada Curvada ou Cavalinho','4 × 8–10','2','90 s','remadacurv'],
+  ['Puxada Alta ou Remada Iso-lateral','3 × 10–12','1–2','75 s','puxada'],
+  ['Rosca Direta (barra ou halter)','3 × 10–12','1','60 s','rosca'],
+  ['Face Pull ou Crucifixo Invertido','3 × 12–15','1','60 s','facepull']]},
+ {t:'Upper · Quarta',s:'Ênfase PUXADA + peito/ombro · jogo à noite',c:'var(--indigo)',e:'⚖️',
+  note:'🚫 <b>Zero trabalho de perna</b> — nada de agachamento, terra, leg press ou afundo (jogo do Gala à noite). Intensidade normal no superior. Esta é a 2ª dose de costas da semana.',ex:[
+  ['Remada na máquina (peito apoiado)','4 × 10–12','2','90 s','remadamaq'],
+  ['Puxada Neutra (pegada fechada)','3 × 10–12','1–2','75 s','puxada'],
+  ['Supino Inclinado com Halter','3 × 10–12','2','90 s','incmaq'],
+  ['Desenvolvimento Arnold ou Elev. Lateral','3 × 12–15','1','60 s','archnold'],
+  ['Rosca + Tríceps na corda (bi-set)','3 × 12–15','1','60 s','biset']]},
+ {t:'Legs pesado · Quinta',s:'6 dias até o próximo jogo',c:'var(--red)',e:'🦿',
+  note:'🦵 <b>Ordem pensada para o joelho:</b> comece pelo padrão que você tolera melhor. Incha com unilateral profundo? Reduza a amplitude do búlgaro. <b>Nunca à falha nos compostos.</b>',ex:[
+  ['Agachamento Livre — amplitude sem dor','4 × 5–8','2–3','2–3 min','agacho'],
+  ['Terra Romeno (barra) — posterior','3 × 6–10','2','2 min','rdl'],
+  ['Cadeira Extensora — chave p/ joelho','3 × 10–15','1–2','90 s','extensora'],
+  ['Afundo Búlgaro ou Passada','3 × 8–10/perna','2','90 s','bulgaro'],
+  ['Mesa Flexora + Panturrilha em pé','3 × 10–15','1','60 s','flexopant']]},
+ {t:'Prevenção · Sexta',s:'Foco futebol + joelho',c:'var(--green)',e:'🛡️',
+  note:'Exercícios de prevenção progridem por <b>tempo/amplitude</b>, não RIR. Pliometria só com joelho verde.',ex:[
+  ['Nordic Hamstring Curl','3 × 6–8','—','90 s','nordic'],
+  ['Copenhagen Plank (cada lado)','3 × 20–30 s','—','45 s','copenhagen'],
+  ['Isométrico na parede (Spanish squat)','3 × 30–45 s','—','60 s','spanish'],
+  ['RDL Unilateral ou Step-up','3 × 8–10/perna','—','75 s','rdluni'],
+  ['Pliometria progressiva','2–3 séries','—','60 s','plio'],
+  ['Mobilidade tornozelo/quadril','8–10 min','—','—','mobcirc']]}];
+$('#wolist').innerHTML=WOS.map((w,i)=>`
+ <details class="wo"${i===((new Date().getDay()+6)%7)&&i<5?' open':''}>
+  <summary><div class="wic" style="background:${w.c}">${w.e}</div>
+   <div class="wt"><b>${w.t}</b><small>${w.s}</small></div>
+   <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+  <div class="body">
+   ${w.note?`<div class="wonote">${w.note}</div>`:''}
+   ${w.ex.map(e=>`<div class="exrow"><details class="ex">
+     <summary><div class="en">${e[0]}<small>descanso ${e[3]}</small></div>
+      <div class="meta"><span class="sr">${e[1]}</span>${e[2]!=='—'?`<span class="rir">RIR ${e[2]}</span>`:''}
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div></summary>
+     <div class="howto"><b>Como fazer</b><ol>${H[e[4]].map(s=>`<li>${s}</li>`).join('')}</ol></div>
+    </details></div>`).join('')}
+  </div></details>`).join('');
+
+/* ============ MANHÃ (kettlebell + SVG) ============ */
+const G='<line class="fig-ground" x1="8" y1="92" x2="152" y2="92"/>';
+const KB=(x,y,s=1)=>`<g transform="translate(${x},${y}) scale(${s})"><path class="fig-stroke" style="stroke:var(--teal);stroke-width:4" d="M-6,-8 a8 8 0 0 1 12,0"/><circle class="fig-kb" cx="0" cy="0" r="8"/></g>`;
+const FIGS={
+ prancha:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="26" cy="52" r="8"/><path class="fig-stroke" d="M35 56 L100 50 L138 60"/><path class="fig-stroke" d="M42 58 L42 76 L60 76"/><path class="fig-stroke" d="M118 55 L132 90"/><path class="fig-stroke" d="M124 54 L140 90"/></svg>`,
+ deadbug:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="24" cy="80" r="8"/><path class="fig-stroke" d="M33 82 L80 82"/><path class="fig-stroke" d="M44 80 L44 42"/>${KB(44,30,0.9)}<path class="fig-stroke" d="M80 82 L96 56 L116 60"/><path class="fig-stroke" d="M80 82 L126 72"/></svg>`,
+ pallof:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="58" cy="18" r="8"/><path class="fig-stroke" d="M58 27 L58 60"/><path class="fig-stroke" d="M58 60 L46 91"/><path class="fig-stroke" d="M58 60 L72 91"/><path class="fig-stroke" d="M58 36 L96 40"/><path class="fig-dash" d="M98 40 C 120 38, 138 30, 150 18"/><circle class="fig-kb" cx="99" cy="40" r="5"/></svg>`,
+ suitcase:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="80" cy="15" r="8"/><path class="fig-stroke" d="M80 24 L80 58"/><path class="fig-stroke" d="M80 58 L64 91"/><path class="fig-stroke" d="M80 58 L96 89"/><path class="fig-stroke" d="M80 32 L62 52"/><path class="fig-stroke" d="M80 32 L102 56"/>${KB(104,68,1)}<path class="fig-dash" d="M118 40 L 142 40" /><path class="fig-dash" d="M136 34 L142 40 L136 46"/></svg>`,
+ halo:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="78" cy="26" r="8"/><path class="fig-stroke" d="M78 35 L78 64"/><path class="fig-stroke" d="M78 64 L64 91"/><path class="fig-stroke" d="M78 64 L92 91"/><path class="fig-stroke" d="M78 42 L58 30 L62 16"/><path class="fig-stroke" d="M78 42 L98 32 L100 18"/>${KB(80,8,0.85)}<path class="fig-dash" d="M52 26 A 28 16 0 1 0 106 22"/></svg>`,
+ twist:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="52" cy="30" r="8"/><path class="fig-stroke" d="M57 37 L76 68"/><path class="fig-stroke" d="M76 68 L108 50 L124 58"/><path class="fig-stroke" d="M62 44 L92 46"/>${KB(96,50,0.85)}<path class="fig-dash" d="M96 66 A 20 8 0 1 0 96 34" transform="rotate(8 96 50)"/></svg>`,
+ ankle:`<svg viewBox="0 0 160 100">${G}<line class="fig-stroke" style="stroke:var(--ter);stroke-width:3.5" x1="126" y1="10" x2="126" y2="92"/><circle class="fig-head" cx="52" cy="20" r="8"/><path class="fig-stroke" d="M56 28 L74 56"/><path class="fig-stroke" d="M74 56 L100 62 L100 91"/><path class="fig-stroke" d="M74 56 L58 91"/><path class="fig-stroke" d="M62 34 L96 30"/><path class="fig-dash" d="M104 52 L118 46"/><path class="fig-dash" d="M112 42 L119 46 L115 53"/></svg>`,
+ s9090:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="62" cy="24" r="8"/><path class="fig-stroke" d="M64 33 L72 70"/><path class="fig-stroke" d="M72 70 L100 70 L100 91"/><path class="fig-stroke" d="M72 70 L48 78 L46 91"/><path class="fig-stroke" d="M66 44 L88 52"/></svg>`,
+ tspine:`<svg viewBox="0 0 160 100">${G}<circle class="fig-head" cx="58" cy="34" r="8"/><path class="fig-stroke" d="M62 42 L84 66"/><path class="fig-stroke" d="M84 66 L112 62 L120 91"/><path class="fig-stroke" d="M84 66 L84 91"/><path class="fig-stroke" d="M68 48 L64 88"/><path class="fig-stroke" d="M70 50 L86 24"/><path class="fig-dash" d="M92 20 A 24 20 0 0 1 104 44"/></svg>`
+};
+const KBDAYS=[
+ {d:'Seg',t:'Anti-extensão',ex:[
+   {n:'Prancha',dose:'2–3 × 30–45 s',f:'prancha',p:'Corpo em linha reta do calcanhar à cabeça, glúteo e abdômen contraídos. Não deixe o quadril cair nem subir.'},
+   {n:'Dead Bug com kettlebell',dose:'2–3 × 30–45 s',f:'deadbug',p:'Deitado, lombar colada no chão, KB estendido acima do peito. Estenda perna alternada devagar, sem a lombar descolar.'}]},
+ {d:'Ter',t:'Anti-rotação',ex:[
+   {n:'Pallof Press',dose:'2–3 × 10–12',f:'pallof',p:'Com faixa (ou cabo) lateral, estenda os braços à frente e resista à rotação. Quadril e ombro quadrados, sem girar.'},
+   {n:'Suitcase Carry',dose:'2–3 × 20–30 m',f:'suitcase',p:'Caminhe com o KB de um lado só, tronco perfeitamente vertical — não incline para compensar. Troque o lado.'}]},
+ {d:'Qua',t:'Só mobilidade — dia do jogo',ex:[
+   {n:'Circuito de mobilidade',dose:'15 min, sem carga',f:'s9090',p:'Tornozelo, quadril e torácica (ver circuito abaixo). Nada de carga de core — poupe tudo para o Gala à noite.'}]},
+ {d:'Qui',t:'Só mobilidade + ativação leve',ex:[
+   {n:'Mobilidade + ativação',dose:'15 min, sem carga',f:'ankle',p:'Sem core carregado: agachamento/RDL pesado hoje. Mobilidade + ativação leve de glúteo e quadríceps (banda, ponte).'}]},
+ {d:'Sex',t:'Rotação controlada',ex:[
+   {n:'Kettlebell Halo',dose:'2 × 10–12',f:'halo',p:'Circule o KB ao redor da cabeça, bem perto, cotovelos apontando para cima. Lento e controlado, tronco parado.'},
+   {n:'Russian Twist leve',dose:'2 × 10–12',f:'twist',p:'Sentado, tronco levemente inclinado, gire o KB de um lado ao outro com controle. Leve — sem arrancar.'}]},
+ {d:'Sáb',t:'Livre (opcional)',ex:[
+   {n:'Qualquer bloco',dose:'se sentir necessidade',f:'prancha',p:'Escolha o padrão que sentir mais necessidade — ou descanse. Domingo é descanso completo.'}]}];
+const MOB=[
+  {n:'Tornozelo na parede',dose:'8–10 por lado',f:'ankle',p:'Pé a ~10 cm da parede, leve o joelho em direção à parede sem o calcanhar sair do chão. Chave para agachar fundo com joelho seguro.'},
+  {n:'90/90 de quadril',dose:'6–8 transições',f:'s9090',p:'Sentado com as duas pernas a 90°, gire de um lado ao outro mantendo o tronco alto. Solta rotação interna/externa do quadril.'},
+  {n:'Rotação torácica',dose:'6–8 por lado',f:'tspine',p:'Em 4 apoios, mão na nuca, gire o cotovelo em direção ao teto seguindo com o olhar. Compensa o dia inteiro sentado.'}];
+(function(){
+  const seg=$('#kbseg');
+  seg.innerHTML=KBDAYS.map((k,i)=>`<button data-i="${i}">${k.d}</button>`).join('');
+  const dow=Math.min((new Date().getDay()+6)%7,5);
+  function show(i){
+    seg.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===i));
+    const k=KBDAYS[i];
+    $('#kbday').innerHTML=`<div style="font-size:13px;font-weight:700;color:var(--teal);margin:10px 0 2px">${k.t.toUpperCase()}</div>`+
+      k.ex.map(e=>`<div class="kbex"><div class="kbfig">${FIGS[e.f]}</div><div class="kbtxt"><b>${e.n}</b><div class="dose">${e.dose}</div><p>${e.p}</p></div></div>`).join('');
+  }
+  seg.addEventListener('click',ev=>{const b=ev.target.closest('button');if(b)show(+b.dataset.i)});
+  show(dow===6?5:dow>5?0:dow);
+  $('#moblist').innerHTML=MOB.map(e=>`<div class="kbex"><div class="kbfig">${FIGS[e.f]}</div><div class="kbtxt"><b>${e.n}</b><div class="dose">${e.dose}</div><p>${e.p}</p></div></div>`).join('');
+})();
+
+/* ============ NUTRIÇÃO ============ */
+const NUT=[
+ {k:'3.050',p:190,g:75,c:400,cTxt:'~400 g',note:'⚽ <b>Seg/Qua — futebol + treino:</b> dia mais alto de carbo para sustentar treino + jogo. Na quarta, siga o protocolo peri-jogo (pré 17h30–18h · pós ~22h15).'},
+ {k:'2.800',p:185,g:70,c:355,cTxt:'~355 g',note:'🏋️ <b>Ter/Qui — força sem futebol:</b> carbo moderado. Jantar antecipado ~18h30 por causa do MBA, ou lanche proteico para o intervalo.'},
+ {k:'2.450',p:175,g:70,c:280,cTxt:'~280 g',note:'😴 <b>Sex–Dom — descanso:</b> dia mais baixo de carbo — é aqui que o déficit semanal (~200–250 kcal/dia em média) se consolida. Cuidado com o álcool anulando isso.'}];
+function setNut(i){
+  document.querySelectorAll('#nutseg button').forEach((b,j)=>b.classList.toggle('on',j===i));
+  const n=NUT[i];
+  $('#nkcal').textContent=n.k; $('#mp').textContent=n.p+' g'; $('#mc').textContent=n.cTxt;
+  $('#mg').textContent=n.g+' g'; $('#mf').textContent='30–38 g'; $('#nnote').innerHTML=n.note;
+  $('#bp').style.width=(n.p/190*100)+'%'; $('#bc').style.width=(n.c/400*100)+'%';
+  $('#bg').style.width=(n.g/75*100)+'%'; $('#bf').style.width=(i===2?88:100)+'%';
+}
+$('#nutseg').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setNut(+b.dataset.n)});
+setNut([0,1,0,1,2,2,2][(new Date().getDay()+6)%7]);
+
+/* ============ SAÚDE: joelho ============ */
+const SEMTXT={
+ g:['✅ <b>Verde:</b> treino e pliometria normais. Siga o plano.','rgba(52,199,89,.14)','var(--green)'],
+ y:['⚠️ <b>Amarelo:</b> mantenha a força, mas corte pliometria e mudança de direção NESTA semana. Gelo + elevação pós-jogo.','rgba(255,204,0,.16)','#b58900'],
+ r:['🔴 <b>Vermelho:</b> sem impacto e reduza carga de perna. Se repetir 2–3 semanas seguidas, procure fisioterapeuta/ortopedista.','rgba(255,59,48,.13)','var(--red)']};
+function addKnee(s){
+  DB.k.unshift({d:todayISO(),s}); save(); renderKnee();
+  const m=$('#semmsg'); m.style.display='block';
+  m.innerHTML=SEMTXT[s][0]; m.style.background=SEMTXT[s][1]; m.style.color='var(--label)';
+}
+function delKnee(i){DB.k.splice(i,1);save();renderKnee()}
+function renderKnee(){
+  const dot=s=>`<span style="display:inline-block;width:13px;height:13px;border-radius:99px;background:${s==='g'?'var(--green)':s==='y'?'var(--yellow)':'var(--red)'}"></span>`;
+  $('#kneelog').innerHTML=DB.k.length?DB.k.slice(0,14).map((e,i)=>
+    `<div class="logrow"><span class="d">${fmt(e.d)}</span>${dot(e.s)}<span class="v" style="margin-left:4px">${e.s==='g'?'Verde':e.s==='y'?'Amarelo':'Vermelho'}</span><button class="del" onclick="delKnee(${i})">✕</button></div>`).join('')
+   :'<div class="note" style="margin-top:14px">Nenhum registro ainda. Marque na manhã seguinte a cada jogo (seg e qua).</div>';
+  const last3=DB.k.slice(0,3);
+  const al=$('#kneealert');
+  if(last3.length>=2&&last3.filter(e=>e.s==='r').length>=2){
+    al.style.display='block';
+    al.innerHTML='🚨 <b>Vermelho recorrente:</b> derrame repetido merece avaliação — pode ser sobrecarga, déficit de quadríceps ou menisco. Agende fisio/ortopedista.';
+  } else al.style.display='none';
+}
+renderKnee();
+
+/* ============ SAÚDE: peso ============ */
+function addWeight(){
+  const v=parseFloat($('#win').value),d=$('#wdate').value||todayISO();
+  if(!v)return;
+  DB.w=DB.w.filter(e=>e.d!==d); DB.w.push({d,v}); DB.w.sort((a,b)=>a.d<b.d?-1:1);
+  save(); $('#win').value=''; renderW();
+}
+function delW(d){DB.w=DB.w.filter(e=>e.d!==d);save();renderW()}
+function weekKey(ds){const dt=new Date(ds+'T00:00');const m=(dt.getDay()+6)%7;dt.setDate(dt.getDate()-m);return dt.toISOString().slice(0,10)}
+function weeklyAvg(arr){
+  const g={};arr.forEach(e=>{(g[weekKey(e.d)]=g[weekKey(e.d)]||[]).push(e.v)});
+  return Object.entries(g).map(([k,v])=>({d:k,v:v.reduce((a,b)=>a+b)/v.length})).sort((a,b)=>a.d<b.d?-1:1);
+}
+function drawChart(svgId,data,color,avgData){
+  const svg=$( '#'+svgId); const W=600,Hh=+svg.viewBox.baseVal.height,P=34;
+  if(data.length<2){svg.innerHTML=data.length?`<text x="300" y="${Hh/2}" text-anchor="middle" fill="var(--ter)" font-size="14" font-family="inherit">Adicione mais medições para ver o gráfico</text>`:'';return}
+  const vs=data.map(e=>e.v),mn=Math.min(...vs)-.4,mx=Math.max(...vs)+.4;
+  const t0=new Date(data[0].d).getTime(),t1=new Date(data[data.length-1].d).getTime()||t0+1;
+  const X=e=>P+((new Date(e.d).getTime()-t0)/Math.max(t1-t0,1))*(W-P-14);
+  const Y=v=>Hh-24-((v-mn)/(mx-mn))*(Hh-44);
+  let s='';
+  // gridlines
+  for(let i=0;i<=3;i++){const v=mn+(mx-mn)*i/3,y=Y(v);
+    s+=`<line x1="${P}" y1="${y}" x2="${W-14}" y2="${y}" stroke="var(--sep)" stroke-width="1"/><text x="${P-6}" y="${y+4}" text-anchor="end" font-size="10.5" fill="var(--ter)" font-family="inherit">${v.toFixed(1)}</text>`;}
+  const pts=data.map(e=>X(e)+','+Y(e.v)).join(' ');
+  s+=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" opacity=".45"/>`;
+  data.forEach(e=>{s+=`<circle cx="${X(e)}" cy="${Y(e.v)}" r="3" fill="${color}" opacity=".5"/>`});
+  if(avgData&&avgData.length>1){
+    const ap=avgData.map(e=>X(e)+','+Y(e.v)).join(' ');
+    s+=`<polyline points="${ap}" fill="none" stroke="${color}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    avgData.forEach(e=>{s+=`<circle cx="${X(e)}" cy="${Y(e.v)}" r="4.5" fill="${color}" stroke="var(--card)" stroke-width="2"/>`});
+  }
+  svg.innerHTML=s;
+}
+function renderW(){
+  if(!$('#wdate').value)$('#wdate').value=todayISO();
+  const wa=weeklyAvg(DB.w);
+  drawChart('wchart',DB.w,'var(--blue)',wa);
+  // stats
+  let sHtml='';
+  if(DB.w.length){
+    const last=DB.w[DB.w.length-1];
+    sHtml+=`<div class="stat"><div class="sv">${last.v.toFixed(1)}<small style="font-size:12px;font-weight:600;color:var(--sec)"> kg</small></div><div class="sl">Última pesagem · ${fmt(last.d)}</div></div>`;
+    if(wa.length)sHtml+=`<div class="stat"><div class="sv">${wa[wa.length-1].v.toFixed(1)}<small style="font-size:12px;font-weight:600;color:var(--sec)"> kg</small></div><div class="sl">Média desta semana</div></div>`;
+  }
+  $('#wstats').innerHTML=sHtml;
+  // trend
+  const tr=$('#wtrend');
+  if(wa.length>=2){
+    const a=wa[wa.length-2].v,b=wa[wa.length-1].v,pct=(b-a)/a*100;
+    let tag,bg;
+    if(pct<=-0.7){tag='RÁPIDO DEMAIS';bg='var(--red)'}
+    else if(pct<=-0.55){tag='UM POUCO RÁPIDO';bg='var(--orange)'}
+    else if(pct<=-0.25){tag='NO ALVO';bg='var(--green)'}
+    else if(pct<0.05){tag='LENTO';bg='var(--orange)'}
+    else{tag='SUBINDO';bg='var(--orange)'}
+    tr.innerHTML=`<span class="tag" style="background:${bg};color:#fff">${tag}</span> Média semanal: ${pct>0?'+':''}${pct.toFixed(2)}%/sem (meta −0,3 a −0,5%)`;
+  } else tr.innerHTML='';
+  $('#wlog').innerHTML=DB.w.slice(-8).reverse().map(e=>
+   `<div class="logrow"><span class="d">${fmt(e.d)}</span><span class="v">${e.v.toFixed(1)} kg</span><button class="del" onclick="delW('${e.d}')">✕</button></div>`).join('');
+}
+renderW();
+
+/* ============ SAÚDE: cintura ============ */
+function addWaist(){
+  const v=parseFloat($('#cin').value),d=$('#cdate').value||todayISO();
+  if(!v)return;
+  DB.c=DB.c.filter(e=>e.d!==d); DB.c.push({d,v}); DB.c.sort((a,b)=>a.d<b.d?-1:1);
+  save(); $('#cin').value=''; renderC();
+}
+function delC(d){DB.c=DB.c.filter(e=>e.d!==d);save();renderC()}
+function renderC(){
+  if(!$('#cdate').value)$('#cdate').value=todayISO();
+  drawChart('cchart',DB.c,'var(--orange)',DB.c.length>1?DB.c:null);
+  $('#clog').innerHTML=DB.c.slice(-6).reverse().map(e=>
+   `<div class="logrow"><span class="d">${fmt(e.d)}</span><span class="v">${e.v.toFixed(1)} cm</span><button class="del" onclick="delC('${e.d}')">✕</button></div>`).join('');
+}
+renderC();
+
+/* ============ dados ============ */
+function exportData(){
+  const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='planofit-dados-'+todayISO()+'.json';a.click();
+}
+function clearData(){
+  if(confirm('Apagar todos os registros de peso, cintura e joelho?')){
+    DB={w:[],c:[],k:[],bs:null};save();renderW();renderC();renderKnee();location.reload();
+  }
+}
+</script>
+</body>
+</html>
